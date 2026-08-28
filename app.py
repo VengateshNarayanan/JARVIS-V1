@@ -1,24 +1,21 @@
 from flask import Flask, render_template, request, jsonify
-import webbrowser
-import subprocess
-import datetime
-from urllib.parse import quote_plus
+from datetime import datetime
 
 app = Flask(__name__)
 
 
-# -----------------------------
-# HOME
-# -----------------------------
+# =============================
+# HOME PAGE
+# =============================
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -----------------------------
-# COMMAND PROCESSOR
-# -----------------------------
+# =============================
+# COMMAND API
+# =============================
 
 @app.route("/command", methods=["POST"])
 def command():
@@ -29,117 +26,42 @@ def command():
 
     print(f"USER: {user_command}")
 
+
     if not user_command:
+
         return jsonify({
             "response": "I did not receive a command, Sir.",
-            "status": "idle"
+            "action": "none"
         })
 
 
-    # -------------------------
-    # YouTube
-    # -------------------------
+    # =============================
+    # GOOGLE
+    # =============================
 
-    if "open youtube" in user_command or user_command == "youtube":
-
-        webbrowser.open("https://www.youtube.com")
-
-        response = "Opening YouTube."
-
-        print(f"JARVIS: {response}")
+    if "open google" in user_command or user_command == "google":
 
         return jsonify({
-            "response": response,
-            "status": "success"
+            "response": "Opening Google.",
+            "action": "open_google"
         })
 
 
-    # -------------------------
-    # Google
-    # -------------------------
+    # =============================
+    # YOUTUBE
+    # =============================
 
-    elif "open google" in user_command or user_command == "google":
-
-        webbrowser.open("https://www.google.com")
-
-        response = "Opening Google."
-
-        print(f"JARVIS: {response}")
+    elif "open youtube" in user_command or user_command == "youtube":
 
         return jsonify({
-            "response": response,
-            "status": "success"
+            "response": "Opening YouTube.",
+            "action": "open_youtube"
         })
 
 
-    # -------------------------
-    # VS Code
-    # -------------------------
-
-    elif (
-        "open vs code" in user_command
-        or "open visual studio code" in user_command
-    ):
-
-        try:
-
-            subprocess.Popen("code", shell=True)
-
-            response = "Opening Visual Studio Code."
-
-        except Exception:
-
-            response = "I could not open Visual Studio Code."
-
-        print(f"JARVIS: {response}")
-
-        return jsonify({
-            "response": response,
-            "status": "success"
-        })
-
-
-    # -------------------------
-    # TIME
-    # -------------------------
-
-    elif "time" in user_command:
-
-        current_time = datetime.datetime.now().strftime("%I:%M %p")
-
-        response = f"Sir, the current time is {current_time}."
-
-        print(f"JARVIS: {response}")
-
-        return jsonify({
-            "response": response,
-            "status": "success"
-        })
-
-
-    # -------------------------
-    # DATE
-    # -------------------------
-
-    elif "date" in user_command:
-
-        current_date = datetime.datetime.now().strftime(
-            "%A, %d %B %Y"
-        )
-
-        response = f"Today is {current_date}."
-
-        print(f"JARVIS: {response}")
-
-        return jsonify({
-            "response": response,
-            "status": "success"
-        })
-
-
-    # -------------------------
+    # =============================
     # GOOGLE SEARCH
-    # -------------------------
+    # =============================
 
     elif user_command.startswith("search"):
 
@@ -149,74 +71,97 @@ def command():
             1
         ).strip()
 
+
         if search_query:
 
-            webbrowser.open(
-                "https://www.google.com/search?q="
-                + quote_plus(search_query)
-            )
+            return jsonify({
+                "response": f"Searching Google for {search_query}.",
+                "action": "google_search",
+                "query": search_query
+            })
 
-            response = f"Searching Google for {search_query}."
-
-        else:
-
-            response = "What would you like me to search for, Sir?"
-
-
-        print(f"JARVIS: {response}")
 
         return jsonify({
-            "response": response,
-            "status": "success"
+            "response": "What would you like me to search for, Sir?",
+            "action": "none"
         })
 
 
-    # -------------------------
-    # EXIT
-    # -------------------------
+    # =============================
+    # TIME
+    # =============================
+
+    elif "time" in user_command:
+
+        return jsonify({
+            "response": "Let me check the current time, Sir.",
+            "action": "get_time"
+        })
+
+
+    # =============================
+    # DATE
+    # =============================
+
+    elif "date" in user_command:
+
+        return jsonify({
+            "response": "Let me check today's date, Sir.",
+            "action": "get_date"
+        })
+
+
+    # =============================
+    # VS CODE
+    # =============================
 
     elif (
-        "exit" in user_command
-        or "shutdown jarvis" in user_command
-        or "goodbye" in user_command
+        "open vs code" in user_command
+        or "open visual studio code" in user_command
     ):
 
-        response = "Goodbye Sir."
-
-        print(f"JARVIS: {response}")
-
         return jsonify({
-            "response": response,
-            "status": "exit"
+            "response": "VS Code can only be opened when JARVIS is running locally on the computer.",
+            "action": "none"
         })
 
 
-    # -------------------------
-    # UNKNOWN COMMAND
-    # -------------------------
+    # =============================
+    # GOODBYE
+    # =============================
+
+    elif (
+        "goodbye" in user_command
+        or "shutdown jarvis" in user_command
+        or user_command == "exit"
+    ):
+
+        return jsonify({
+            "response": "Goodbye Sir.",
+            "action": "exit"
+        })
+
+
+    # =============================
+    # UNKNOWN
+    # =============================
 
     else:
 
-        response = (
-            "I do not know how to perform that command yet, Sir."
-        )
-
-        print(f"JARVIS: {response}")
-
         return jsonify({
-            "response": response,
-            "status": "unknown"
+            "response": "I do not know how to perform that command yet, Sir.",
+            "action": "none"
         })
 
 
-# -----------------------------
+# =============================
 # START SERVER
-# -----------------------------
+# =============================
 
 if __name__ == "__main__":
 
     app.run(
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=5000,
         debug=True
     )
