@@ -3,7 +3,8 @@
 // ==========================================
 
 
-const orb = document.getElementById("orb");
+const orb =
+    document.getElementById("orb");
 
 const statusText =
     document.getElementById("statusText");
@@ -34,7 +35,9 @@ function setStatus(status, text) {
     );
 
     if (status) {
+
         orb.classList.add(status);
+
     }
 
     statusText.textContent = text;
@@ -42,7 +45,7 @@ function setStatus(status, text) {
 
 
 // ==========================================
-// ADD COMMAND TO HISTORY
+// COMMAND HISTORY
 // ==========================================
 
 function addCommand(command) {
@@ -50,7 +53,8 @@ function addCommand(command) {
     const item =
         document.createElement("div");
 
-    item.className = "command-item";
+    item.className =
+        "command-item";
 
     item.innerHTML = `
         <span class="command-icon">◉</span>
@@ -59,12 +63,17 @@ function addCommand(command) {
 
     commandList.prepend(item);
 
-    // Keep only latest 4
-    while (commandList.children.length > 4) {
+
+    while (
+        commandList.children.length > 4
+    ) {
+
         commandList.removeChild(
             commandList.lastChild
         );
+
     }
+
 }
 
 
@@ -78,17 +87,12 @@ function speak(text) {
 
         if (!("speechSynthesis" in window)) {
 
-            console.warn(
-                "Speech synthesis is not supported."
-            );
-
             resolve();
 
             return;
+
         }
 
-
-        // Stop previous speech
 
         window.speechSynthesis.cancel();
 
@@ -99,9 +103,9 @@ function speak(text) {
 
         utterance.rate = 0.95;
 
-        utterance.pitch = 1.0;
+        utterance.pitch = 1;
 
-        utterance.volume = 1.0;
+        utterance.volume = 1;
 
 
         utterance.onstart = () => {
@@ -143,14 +147,139 @@ function speak(text) {
         );
 
     });
+
 }
 
 
 // ==========================================
-// SEND COMMAND TO PYTHON
+// EXECUTE BROWSER ACTION
 // ==========================================
 
-async function sendCommand(command = null) {
+function executeAction(data) {
+
+    const action =
+        data.action;
+
+
+    // -----------------------------
+    // GOOGLE
+    // -----------------------------
+
+    if (action === "open_google") {
+
+        window.open(
+            "https://www.google.com",
+            "_blank"
+        );
+
+    }
+
+
+    // -----------------------------
+    // YOUTUBE
+    // -----------------------------
+
+    else if (
+        action === "open_youtube"
+    ) {
+
+        window.open(
+            "https://www.youtube.com",
+            "_blank"
+        );
+
+    }
+
+
+    // -----------------------------
+    // GOOGLE SEARCH
+    // -----------------------------
+
+    else if (
+        action === "google_search"
+    ) {
+
+        const query =
+            encodeURIComponent(
+                data.query
+            );
+
+
+        window.open(
+            "https://www.google.com/search?q=" + query,
+            "_blank"
+        );
+
+    }
+
+
+    // -----------------------------
+    // TIME
+    // -----------------------------
+
+    else if (
+        action === "get_time"
+    ) {
+
+        const now =
+            new Date();
+
+
+        const time =
+            now.toLocaleTimeString(
+                [],
+                {
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            );
+
+
+        data.response =
+            `Sir, the current time is ${time}.`;
+
+    }
+
+
+    // -----------------------------
+    // DATE
+    // -----------------------------
+
+    else if (
+        action === "get_date"
+    ) {
+
+        const now =
+            new Date();
+
+
+        const date =
+            now.toLocaleDateString(
+                [],
+                {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+
+        data.response =
+            `Today is ${date}, Sir.`;
+
+    }
+
+}
+
+
+// ==========================================
+// SEND COMMAND
+// ==========================================
+
+async function sendCommand(
+    command = null
+) {
 
     if (!command) {
 
@@ -161,21 +290,17 @@ async function sendCommand(command = null) {
 
 
     if (!command) {
+
         return;
+
     }
 
-
-    // Display command
 
     addCommand(command);
 
 
-    // Clear input
-
     commandInput.value = "";
 
-
-    // Processing state
 
     setStatus(
         "processing",
@@ -190,26 +315,27 @@ async function sendCommand(command = null) {
     try {
 
         const response =
-            await fetch("/command", {
+            await fetch(
+                "/command",
+                {
+                    method: "POST",
 
-                method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body: JSON.stringify({
-                    command: command
-                })
-
-            });
+                    body: JSON.stringify({
+                        command: command
+                    })
+                }
+            );
 
 
         if (!response.ok) {
 
             throw new Error(
-                "Backend request failed."
+                "Backend request failed"
             );
 
         }
@@ -219,7 +345,12 @@ async function sendCommand(command = null) {
             await response.json();
 
 
-        // Show response
+        // Execute browser-side action
+
+        executeAction(data);
+
+
+        // Display response
 
         responseBox.textContent =
             data.response;
@@ -232,9 +363,9 @@ async function sendCommand(command = null) {
         );
 
 
-        // Exit state
-
-        if (data.status === "exit") {
+        if (
+            data.action === "exit"
+        ) {
 
             setStatus(
                 null,
@@ -244,7 +375,9 @@ async function sendCommand(command = null) {
         }
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "JARVIS ERROR:",
@@ -253,7 +386,7 @@ async function sendCommand(command = null) {
 
 
         responseBox.textContent =
-            "I cannot communicate with my Python backend.";
+            "I cannot communicate with the JARVIS server.";
 
 
         setStatus(
@@ -267,7 +400,7 @@ async function sendCommand(command = null) {
 
 
 // ==========================================
-// VOICE RECOGNITION
+// SPEECH RECOGNITION
 // ==========================================
 
 let recognition = null;
@@ -283,13 +416,13 @@ function setupSpeechRecognition() {
     if (!SpeechRecognition) {
 
         console.warn(
-            "Speech recognition is not supported in this browser."
+            "Speech recognition is not supported."
         );
 
-        micButton.disabled = true;
 
-        micButton.title =
-            "Speech recognition is not supported in this browser.";
+        micButton.disabled =
+            true;
+
 
         return;
 
@@ -300,25 +433,34 @@ function setupSpeechRecognition() {
         new SpeechRecognition();
 
 
-    recognition.lang = "en-US";
-
-    recognition.continuous = false;
-
-    recognition.interimResults = false;
+    recognition.lang =
+        "en-US";
 
 
-    // --------------------------------------
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    // =============================
     // START
-    // --------------------------------------
+    // =============================
 
     recognition.onstart = () => {
 
-        micButton.classList.add("active");
+        micButton.classList.add(
+            "active"
+        );
+
 
         setStatus(
             "listening",
             "Listening..."
         );
+
 
         responseBox.textContent =
             "I am listening, Sir.";
@@ -326,47 +468,51 @@ function setupSpeechRecognition() {
     };
 
 
-    // --------------------------------------
+    // =============================
     // RESULT
-    // --------------------------------------
+    // =============================
 
-    recognition.onresult = (event) => {
+    recognition.onresult =
+        (event) => {
 
-        const transcript =
-            event.results[0][0]
-                .transcript
-                .trim();
-
-
-        console.log(
-            "Voice command:",
-            transcript
-        );
+            const transcript =
+                event.results[0][0]
+                    .transcript
+                    .trim();
 
 
-        commandInput.value =
-            transcript;
+            console.log(
+                "Voice command:",
+                transcript
+            );
 
 
-        micButton.classList.remove(
-            "active"
-        );
+            commandInput.value =
+                transcript;
 
 
-        sendCommand(transcript);
+            micButton.classList.remove(
+                "active"
+            );
 
-    };
+
+            sendCommand(
+                transcript
+            );
+
+        };
 
 
-    // --------------------------------------
+    // =============================
     // END
-    // --------------------------------------
+    // =============================
 
     recognition.onend = () => {
 
         micButton.classList.remove(
             "active"
         );
+
 
         if (
             !orb.classList.contains(
@@ -387,59 +533,64 @@ function setupSpeechRecognition() {
     };
 
 
-    // --------------------------------------
+    // =============================
     // ERROR
-    // --------------------------------------
+    // =============================
 
-    recognition.onerror = (event) => {
+    recognition.onerror =
+        (event) => {
 
-        console.error(
-            "Speech recognition error:",
-            event.error
-        );
-
-
-        micButton.classList.remove(
-            "active"
-        );
+            console.error(
+                "Speech recognition error:",
+                event.error
+            );
 
 
-        if (event.error === "not-allowed") {
-
-            responseBox.textContent =
-                "Microphone permission was denied.";
-
-        }
-
-        else if (
-            event.error === "no-speech"
-        ) {
-
-            responseBox.textContent =
-                "I did not hear anything, Sir.";
-
-        }
-
-        else {
-
-            responseBox.textContent =
-                "I could not understand that.";
-
-        }
+            micButton.classList.remove(
+                "active"
+            );
 
 
-        setStatus(
-            null,
-            "Ready"
-        );
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
 
-    };
+                responseBox.textContent =
+                    "Microphone permission was denied.";
+
+            }
+
+            else if (
+                event.error ===
+                "no-speech"
+            ) {
+
+                responseBox.textContent =
+                    "I did not hear anything, Sir.";
+
+            }
+
+            else {
+
+                responseBox.textContent =
+                    "I could not understand that.";
+
+            }
+
+
+            setStatus(
+                null,
+                "Ready"
+            );
+
+        };
 
 }
 
 
 // ==========================================
-// START LISTENING
+// MICROPHONE BUTTON
 // ==========================================
 
 function startListening() {
@@ -480,7 +631,9 @@ commandInput.addEventListener(
     "keydown",
     function(event) {
 
-        if (event.key === "Enter") {
+        if (
+            event.key === "Enter"
+        ) {
 
             sendCommand();
 
