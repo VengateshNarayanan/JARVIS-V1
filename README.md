@@ -1,11 +1,12 @@
 # 🤖 JARVIS V1
 
-A simple voice-controlled personal desktop assistant built using **Python, Flask, HTML, CSS, and JavaScript**.
+A simple voice-controlled personal assistant built using **Python, Flask, HTML, CSS, and JavaScript**.
 
 ## 🌐 Live Demo
 
-**Render Deployment:**
-https://jarvis-v1-x7pq.onrender.com/
+🚀 **[JARVIS V1 — Live on Render](https://jarvis-v1-x7pq.onrender.com/)**
+
+The deployed version can be accessed from any device with a modern web browser.
 
 ---
 
@@ -14,88 +15,89 @@ https://jarvis-v1-x7pq.onrender.com/
 * 🎤 Voice commands
 * ⌨️ Text commands
 * 🔊 Voice responses
-* 🌀 Animated JARVIS GUI
-* 🌐 Opens websites
-* 💻 Opens applications
-* 🕐 Provides time and date
-* 🔎 Performs Google searches
+* 🌀 Animated JARVIS interface
+* 🌐 Open websites in the user's browser
+* 🔎 Google search
+* 🕐 Local time
+* 📅 Local date
 
 ---
 
 ## 🎙️ Supported Commands
 
-| Command                   | Action                   |
-| ------------------------- | ------------------------ |
-| `Open YouTube`            | Opens YouTube            |
-| `Open Google`             | Opens Google             |
-| `Open VS Code`            | Opens Visual Studio Code |
-| `What is the time?`       | Tells the current time   |
-| `What is the date?`       | Tells the current date   |
-| `Search Python tutorials` | Searches Google          |
-| `Goodbye`                 | JARVIS says goodbye      |
+| Command                   | Action                              |
+| ------------------------- | ----------------------------------- |
+| `Open YouTube`            | Opens YouTube in the user's browser |
+| `Open Google`             | Opens Google in the user's browser  |
+| `Search Python tutorials` | Performs a Google search            |
+| `What is the time?`       | Gives the user's local time         |
+| `What is the date?`       | Gives the user's local date         |
+| `Goodbye`                 | JARVIS responds and goes offline    |
+
+> **Note:** `Open VS Code` is not available in the deployed version because a website cannot directly launch applications on another user's computer.
 
 ---
 
 ## 🛠️ Technologies Used
 
-* **Python** — Assistant logic and system actions
-* **Flask** — Backend and API communication
-* **HTML** — GUI structure
-* **CSS** — Interface design and animations
-* **JavaScript** — Voice recognition and frontend interaction
-* **Web Speech API** — Voice input and voice output
+* **Python** — Backend logic
+* **Flask** — Web server and API
+* **HTML** — Interface structure
+* **CSS** — UI design and animations
+* **JavaScript** — Voice recognition and browser actions
+* **Web Speech API** — Voice input and output
 
 ---
 
 ## 📁 Project Structure
 
-The project was created with a simple separation between the Flask backend and frontend:
-
 ```text
 JARVIS/
 │
 ├── app.py
+├── requirements.txt
+├── .gitignore
 │
 ├── templates/
 │   └── index.html
 │
-├── static/
-│   ├── style.css
-│   └── script.js
-│
-└── venv/
+└── static/
+    ├── style.css
+    └── script.js
 ```
 
-### Workflow
+### Development Workflow
 
 ```text
-User
- ↓
-Voice / Text Command
- ↓
-JavaScript
- ↓
-Flask API
- ↓
-Python
- ↓
-Command Processing
- ↓
-Browser / Application
- ↓
-JARVIS Response
+Create Project Folder
+        ↓
+Create Flask Backend
+        ↓
+Create HTML Interface
+        ↓
+Design GUI with CSS
+        ↓
+Add Voice & Interaction with JavaScript
+        ↓
+Connect Frontend with Flask API
+        ↓
+Test Locally
+        ↓
+Push to GitHub
+        ↓
+Deploy on Render
+        ↓
+🌐 Public JARVIS
 ```
-
-The **HTML** creates the interface, **CSS** gives JARVIS its futuristic animated design, **JavaScript** handles voice and user interaction, while **Python + Flask** process commands and perform the required actions.
 
 ---
 
 ## ▶️ Run Locally
 
-Install Flask:
+Install the required packages:
 
 ```bash
-py -m pip install flask
+py -m pip install -r requirements.txt
 ```
 
 Run JARVIS:
@@ -104,7 +106,7 @@ Run JARVIS:
 py app.py
 ```
 
-Then open:
+Open:
 
 ```text
 http://127.0.0.1:5000
@@ -116,6 +118,6 @@ Allow microphone access in the browser to use voice commands.
 
 ## 🚀 Version
 
-**JARVIS V1.0 — Basic Voice Assistant**
+**JARVIS V1.0 — Public Web Assistant**
 
-This version focuses on understanding the basic workflow of building a voice assistant with a graphical interface. Future versions can introduce AI/LLM integration, more system commands, memory, and advanced automation.
+This version focuses on learning how to connect a **frontend, JavaScript voice interface, Flask backend, and browser-based actions** into a single working assistant.
