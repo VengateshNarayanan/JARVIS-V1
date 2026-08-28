@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>JARVIS — Personal Assistant</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                J
+            </div>
+
+            <div>
+
+                <h1>JARVIS</h1>
+
+                <span>
+                    PERSONAL AI ASSISTANT
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="system-status">
+
+            <span class="online-dot"></span>
+
+            <span>ONLINE</span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main>
+
+
+        <!-- CENTER -->
+
+        <section class="center">
+
+            <div class="greeting">
+
+                <h2>
+                    Hello Sir, I am
+                    <span>JARVIS</span>
+                </h2>
+
+                <p>
+                    Your personal desktop assistant
+                </p>
+
+            </div>
+
+
+            <!-- ORB -->
+
+            <div
+                class="orb-container"
+                id="orb"
+            >
+
+                <div class="orb-ring ring-one"></div>
+
+                <div class="orb-ring ring-two"></div>
+
+                <div class="orb-ring ring-three"></div>
+
+                <div class="orb-particles"></div>
+
+                <div class="orb">
+
+                    <div class="orb-inner"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div
+                class="assistant-status"
+                id="assistantStatus"
+            >
+
+                <span class="status-pulse"></span>
+
+                <span id="statusText">
+                    Ready
+                </span>
+
+            </div>
+
+
+            <!-- RESPONSE -->
+
+            <div
+                class="response"
+                id="response"
+            >
+
+                Say something, Sir.
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             RIGHT PANEL
+        ========================== -->
+
+        <aside class="sidebar">
+
+
+            <!-- RECENT COMMANDS -->
+
+            <div class="panel">
+
+                <div class="panel-title">
+
+                    <span>RECENT COMMANDS</span>
+
+                    <span class="panel-line"></span>
+
+                </div>
+
+
+                <div
+                    class="command-list"
+                    id="commandList"
+                >
+
+                    <div class="command-item">
+
+                        <span class="command-icon">
+                            ◉
+                        </span>
+
+                        <span>
+                            System initialized
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="panel">
+
+                <div class="panel-title">
+
+                    <span>QUICK ACTIONS</span>
+
+                    <span class="panel-line"></span>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <button
+                        onclick="sendCommand('open google')"
+                    >
+                        <span>◎</span>
+                        Google
+                    </button>
+
+
+                    <button
+                        onclick="sendCommand('open youtube')"
+                    >
+                        <span>▶</span>
+                        YouTube
+                    </button>
+
+
+                    <button
+                        onclick="sendCommand('open vs code')"
+                    >
+                        <span>⌘</span>
+                        VS Code
+                    </button>
+
+
+                    <button
+                        onclick="sendCommand('what is the time')"
+                    >
+                        <span>◷</span>
+                        Time
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+    </main>
+
+
+
+    <!-- =========================
+         COMMAND BAR
+    ========================== -->
+
+    <footer>
+
+        <div class="command-bar">
+
+            <button
+                class="mic-button"
+                id="micButton"
+                onclick="startListening()"
+                title="Voice command"
+            >
+
+                🎤
+
+            </button>
+
+
+            <input
+                type="text"
+                id="commandInput"
+                placeholder="Type a command..."
+                autocomplete="off"
+            >
+
+
+            <button
+                class="send-button"
+                onclick="sendCommand()"
+            >
+
+                ➤
+
+            </button>
+
+        </div>
+
+
+        <div class="hint">
+
+            Press the microphone and speak to JARVIS
+
+        </div>
+
+    </footer>
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+</body>
+
+</html>
